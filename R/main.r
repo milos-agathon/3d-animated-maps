@@ -133,9 +133,9 @@ normalize_channel <- function(channel){ #channel
 
 adjust_colors <- function(
     r, g, b, gamma_values, desaturation_factor) {
-    r <- r^gamma_values[1]
-    g <- g^gamma_values[2]
-    b <- b^gamma_values[3] #b
+    r <- r^gamma_values[1] * brightness_factor
+    g <- g^gamma_values[2] * brightness_factor
+    b <- b^gamma_values[3] * brightness_factor
 
     gray <- (r + g + b) / 3
     r <- gray * (1 - desaturation_factor) + r * desaturation_factor
@@ -145,7 +145,8 @@ adjust_colors <- function(
     list(r, g, b)
 }
 
-factor <- 0.4
+brightness_factor <- 2
+factor <- 0.8
 theta <- -15
 phi <- 30
 zoom <- 0.88
@@ -170,7 +171,7 @@ for(i in seq_along(downloaded_weeks)) {
 
     adjusted <- adjust_colors(
         r, g, b,
-        gamma_values = c(.6, .5, .8),
+        gamma_values = c(0.7, 0.6, 0.8),
         desaturation_factor = factor
     )
 
@@ -246,5 +247,5 @@ av::av_encode_video(
     dir(main_dir, full.names = TRUE, 
     pattern = "frame"),
     output = video_file,
-    framerate = 2
+    framerate = 1
 )
